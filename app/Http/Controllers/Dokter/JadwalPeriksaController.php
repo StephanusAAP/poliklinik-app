@@ -9,17 +9,20 @@ use Illuminate\Support\Facades\Auth;
 
 class JadwalPeriksaController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $dokter = Auth::user();
         $jadwalPeriksas = JadwalPeriksa::where('id_dokter', $dokter->id)->orderBy('hari')->get();
         return view('dokter.jadwal-periksa.index', compact('jadwalPeriksas'));
     }
 
-    public function create(){
+    public function create()
+    {
         return view('dokter.jadwal-periksa.create');
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $request->validate([
             'hari' => 'required',
             'jam_mulai' => 'required',
@@ -38,12 +41,14 @@ class JadwalPeriksaController extends Controller
             ->with('type', 'success');
     }
 
-    public function edit($id){
+    public function edit($id)
+    {
         $jadwalPeriksa = JadwalPeriksa::where('id_dokter', Auth::id())->findOrFail($id);
         return view('dokter.jadwal-periksa.edit', compact('jadwalPeriksa'));
     }
 
-    public function update(Request $request, string $id){
+    public function update(Request $request, string $id)
+    {
         $request->validate([
             'hari' => 'required',
             'jam_mulai' => 'required',
@@ -62,7 +67,8 @@ class JadwalPeriksaController extends Controller
             ->with('type', 'success');
     }
 
-    public function destroy(string $id){
+    public function destroy(string $id)
+    {
         $jadwalPeriksa = JadwalPeriksa::where('id_dokter', Auth::id())->findOrFail($id);
         $jadwalPeriksa->delete();
 
