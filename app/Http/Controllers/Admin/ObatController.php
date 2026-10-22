@@ -77,4 +77,13 @@ class ObatController extends Controller
             ->with('message', 'Data Obat berhasil di Hapus')
             ->with('type', 'success');
     }
+
+    public function export()
+    {
+        $obats = \App\Models\Obat::all();
+
+        return response(view('admin.obat.export', compact('obats')))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="Data_Obat.xls"');
+    }
 }

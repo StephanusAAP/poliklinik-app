@@ -88,4 +88,13 @@ class PasienController extends Controller
             ->with('message', 'Data Pasien berhasil dihapus')
             ->with('type', 'success');
     }
+
+    public function export()
+    {
+        $pasiens = \App\Models\User::where('role', 'pasien')->get();
+
+        return response(view('admin.pasien.export', compact('pasiens')))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="Data_Pasien.xls"');
+    }
 }

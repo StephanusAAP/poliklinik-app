@@ -76,4 +76,13 @@ class JadwalPeriksaController extends Controller
             ->with('message', 'Berhasil Melakukan Hapus Data')
             ->with('type', 'success');
     }
+
+    public function export()
+    {
+        $jadwals = \App\Models\JadwalPeriksa::all();
+
+        return response(view('dokter.jadwal-periksa.export', compact('jadwals')))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="Jadwal_Periksa.xls"');
+    }
 }

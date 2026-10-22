@@ -96,4 +96,13 @@ class DokterController extends Controller
             ->with('message', 'Data Dokter Berhasil dihapus')
             ->with('type', 'success');
     }
+
+    public function export()
+    {
+        $dokters = \App\Models\User::where('role', 'dokter')->get();
+
+        return response(view('admin.dokter.export', compact('dokters')))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="Data_Dokter.xls"');
+    }
 }

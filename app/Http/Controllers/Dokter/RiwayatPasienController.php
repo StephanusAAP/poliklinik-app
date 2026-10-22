@@ -34,4 +34,18 @@ class RiwayatPasienController extends Controller
 
         return view('dokter.riwayat-pasien.show', compact('periksa'));
     }
+
+    public function export()
+    {
+        $riwayatPasien = \App\Models\Periksa::whereHas('daftarPoli.jadwalPeriksa', function ($query) {
+            $query->where('id_dokter', Auth::id());
+        })->with([
+            'daftarPoli.pasien',
+            'detailPeriksas.obat'
+        ])->orderBy('tgl_periksa', 'desc')->get();
+
+        return response(view('dokter.riwayat-pasien.export', compact('riwayatPasien')))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="Riwayat_Pasien_'.date('Ymd').'.xls"');
+    }
 }
