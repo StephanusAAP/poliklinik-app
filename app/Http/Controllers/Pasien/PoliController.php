@@ -33,6 +33,17 @@ class PoliController extends Controller
             'id_pasien' => 'required|exists:users,id',
         ]);
 
+        $antrianAktif = DaftarPoli::where('id_pasien', $request->id_pasien)
+            ->whereDoesntHave('periksas')
+            ->first();
+
+        if ($antrianAktif) {
+            return redirect()
+                ->back()
+                ->with('message', 'Gagal mendaftar! Anda masih memiliki antrian aktif yang belum selesai diperiksa.')
+                ->with('type', 'error');
+        }
+
         $jumlahSudahDaftar = DaftarPoli::where('id_jadwal', $request->id_jadwal)->count();
 
         DaftarPoli::create([

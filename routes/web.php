@@ -13,6 +13,7 @@ use App\Http\Controllers\Dokter\RiwayatPasienController;
 use App\Http\Controllers\Pasien\PoliController;
 use App\Http\Controllers\Pasien\RiwayatPoliController;
 use App\Http\Controllers\Pasien\PembayaranController;
+use App\Http\Controllers\Pasien\DashboardController as PasienDashboard;
 use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
@@ -56,23 +57,18 @@ Route::middleware(['auth', 'role:dokter'])->prefix('dokter')->group(function () 
     })->name('dokter.dashboard');
 
     Route::resource('jadwal-periksa', JadwalPeriksaController::class);
-
     Route::get('/periksa-pasien', [PeriksaPasienController::class, 'index'])->name('periksa-pasien.index');
     Route::post('/periksa-pasien', [PeriksaPasienController::class, 'store'])->name('periksa-pasien.store');
     Route::get('/periksa-pasien/{id}', [PeriksaPasienController::class, 'create'])->name('periksa-pasien.create');
     Route::get('/riwayat-pasien', [RiwayatPasienController::class, 'index'])->name('riwayat-pasien.index');
     Route::get('/riwayat-pasien/{id}', [RiwayatPasienController::class, 'show'])->name('riwayat-pasien.show');
-
     Route::get('/dokter/jadwal-export', [App\Http\Controllers\Dokter\JadwalPeriksaController::class, 'export'])->name('jadwal.export');
     Route::get('/riwayat-pasien-export', [App\Http\Controllers\Dokter\RiwayatPasienController::class, 'export'])->name('riwayat-pasien.export');
 });
 
 
 Route::middleware(['auth', 'role:pasien'])->prefix('pasien')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('pasien.dashboard');
-    })->name('pasien.dashboard');
-
+    Route::get('/dashboard', [PasienDashboard::class, 'index'])->name('pasien.dashboard');
     Route::get('/daftar', [PoliController::class, 'get'])->name('pasien.daftar');
     Route::post('/daftar', [PoliController::class, 'submit'])->name('pasien.daftar.submit');
     Route::get('/riwayat', [RiwayatPoliController::class, 'index'])->name('pasien.riwayat.index');

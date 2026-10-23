@@ -57,6 +57,10 @@ class PeriksaPasienController extends Controller
                 ]);
             }
         }
+        $daftarPoli = \App\Models\DaftarPoli::find($request->id_daftar_poli);
+        if ($daftarPoli) {
+            event(new \App\Events\AntrianDiupdate($daftarPoli->id_jadwal, $daftarPoli->no_antrian));
+        }
 
         return redirect()
             ->route('periksa-pasien.index')
