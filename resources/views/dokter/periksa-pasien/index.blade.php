@@ -7,13 +7,6 @@
         </h2>
     </div>
 
-    {{-- Alert Success dari Controller --}}
-    @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
     {{-- Card Table --}}
     <div class="card bg-base-100 shadow-md rounded-2xl border border-slate-200">
         <div class="card-body p-0 overflow-x-auto">

@@ -69,8 +69,7 @@
                         <select name="id_jadwal" id="id_jadwal"
                             class="select select-bordered border-2 px-4 w-full rounded-lg text-sm @error('id_jadwal') select-error @enderror"
                             required disabled>
-                            <option value="">-- Pilih Jadwal --</option>
-                            {{-- Data jadwal dirender secara tersembunyi, lalu difilter menggunakan JS --}}
+                            <option value="">-- Pilih Jadwal --</option>\
                             @foreach ($jadwals as $jadwal)
                                 <option value="{{ $jadwal->id }}" data-id-poli="{{ $jadwal->dokter->id_poli }}"
                                     class="jadwal-option hidden"
@@ -112,14 +111,12 @@
         </div>
     </div>
 
-    {{-- Script JavaScript untuk Filter Dropdown Jadwal --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const poliSelect = document.getElementById('id_poli');
             const jadwalSelect = document.getElementById('id_jadwal');
             const jadwalOptions = document.querySelectorAll('.jadwal-option');
 
-            // Fungsi untuk memfilter jadwal
             function filterJadwal() {
                 const selectedPoliId = poliSelect.value;
                 let isJadwalAvailable = false;
@@ -140,14 +137,12 @@
                 }
             }
 
-            // Jalankan filter saat halaman dimuat (berguna jika ada old() value setelah error validasi)
             if (poliSelect.value !== "") {
                 filterJadwal();
             }
 
-            // Jalankan filter setiap kali Pilihan Poli diganti
             poliSelect.addEventListener('change', function() {
-                jadwalSelect.value = ""; // Reset pilihan jadwal
+                jadwalSelect.value = "";
                 filterJadwal();
             });
         });
