@@ -30,7 +30,7 @@
                 @enderror
 
                 {{-- Data JSON Obat & Total Harga Hidden (Diisi oleh JavaScript) --}}
-                <input type="hidden" name="obat_json" id="obat_json" value="[]">
+                <input type="hidden" name="obat_json" id="obat_json" value="{{ old('obat_json', '[]') }}">
                 <input type="hidden" name="biaya_periksa" id="biaya_periksa" value="0">
 
                 {{-- Pilih Obat --}}
@@ -136,6 +136,43 @@
             let selectedObatList = [];
             let totalHarga = 0;
 
+            // Mengembalikan pilihan obat jika validasi gagal
+            function restoreSelectedObat() {
+                let oldObatIds = [];
+
+                try {
+                    const parsed = JSON.parse(inputObatJson.value || '[]');
+
+                    if (Array.isArray(parsed)) {
+                        oldObatIds = parsed;
+                    }
+                } catch (error) {
+                    oldObatIds = [];
+                }
+
+                const uniqueIds = [...new Set(oldObatIds.map(String))];
+
+                uniqueIds.forEach(id => {
+                    const option = Array.from(selectObat.options)
+                        .find(item => item.value === id);
+
+                    if (!option) return;
+
+                    const stok = parseInt(option.getAttribute('data-stok'), 10);
+
+                    // Jangan kembalikan obat yang stoknya habis
+                    if (!Number.isFinite(stok) || stok <= 0) return;
+
+                    selectedObatList.push({
+                        id: option.value,
+                        nama: option.getAttribute('data-nama'),
+                        harga: parseInt(option.getAttribute('data-harga'), 10)
+                    });
+                });
+
+                renderList();
+            }
+
             // Trigger saat dropdown obat dipilih
             selectObat.addEventListener('change', function() {
                 const option = this.options[this.selectedIndex];
@@ -227,6 +264,7 @@
                     listObatTerpilih.appendChild(badge);
                 });
             }
+            restoreSelectedObat();
         });
     </script>
 </x-layouts.app>
