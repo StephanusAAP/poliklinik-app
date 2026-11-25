@@ -34,6 +34,7 @@
                             <th class="px-6 py-4">Nama Obat</th>
                             <th class="px-6 py-4">Kemasan</th>
                             <th class="px-6 py-4">Harga</th>
+                            <th class="px-6 py-4">Stok</th>
                             <th class="px-6 py-4 text-right">Aksi</th>
                         </tr>
                     </thead>
@@ -45,6 +46,23 @@
 
                                 <td class="px-6 py-4 font-semibold text-slate-800">
                                     {{ $obat->nama_obat }}
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full
+                                        {{ $obat->stok > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
+                                        {{ $obat->stok }}
+                                    </span>
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="inline-block px-3 py-1 text-xs font-semibold rounded-full
+                                        {{ $obat->stok > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
+
+                                        {{ $obat->stok }}
+
+                                    </span>
                                 </td>
 
                                 <td class="px-6 py-4">
@@ -94,7 +112,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center py-12 text-slate-400">
+                                <td colspan="5" class="text-center py-12 text-slate-400">
                                     <i class="fas fa-inbox text-3xl mb-3 block"></i>
                                     Belum ada data obat
                                 </td>
