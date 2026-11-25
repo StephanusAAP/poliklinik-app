@@ -49,23 +49,6 @@
                                 </td>
 
                                 <td class="px-6 py-4">
-                                    <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full
-                                        {{ $obat->stok > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
-                                        {{ $obat->stok }}
-                                    </span>
-                                </td>
-
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="inline-block px-3 py-1 text-xs font-semibold rounded-full
-                                        {{ $obat->stok > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
-
-                                        {{ $obat->stok }}
-
-                                    </span>
-                                </td>
-
-                                <td class="px-6 py-4">
                                     <span
                                         class="inline-block px-3 py-1 text-xs font-semibold
                                              rounded-full bg-green-100 text-green-600">
@@ -75,6 +58,15 @@
 
                                 <td class="px-6 py-4 font-semibold text-slate-800">
                                     Rp {{ number_format($obat->harga, 0, ',', '.') }}
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full
+                                        {{ $obat->stok > 0
+                                            ? 'bg-green-100 text-green-600'
+                                            : 'bg-red-100 text-red-600' }}">
+                                        {{ $obat->stok }}
+                                    </span>
                                 </td>
 
                                 <td class="px-6 py-4 text-right">
