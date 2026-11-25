@@ -21,6 +21,14 @@
                 {{-- ID Daftar Poli Hidden --}}
                 <input type="hidden" name="id_daftar_poli" value="{{ $id }}">
 
+                @error('id_daftar_poli')
+                    <div
+                        class="bg-red-100 border border-red-400
+                        text-red-700 px-4 py-3 rounded-lg mb-5">
+                        {{ $message }}
+                    </div>
+                @enderror
+
                 {{-- Data JSON Obat & Total Harga Hidden (Diisi oleh JavaScript) --}}
                 <input type="hidden" name="obat_json" id="obat_json" value="[]">
                 <input type="hidden" name="biaya_periksa" id="biaya_periksa" value="0">
@@ -37,8 +45,17 @@
                         <option value="" disabled selected>-- Pilih Obat --</option>
                         @foreach ($obats as $obat)
                             <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
-                                data-harga="{{ $obat->harga }}">
-                                {{ $obat->nama_obat }} - Rp {{ number_format($obat->harga, 0, ',', '.') }}
+                                data-harga="{{ $obat->harga }}" data-stok="{{ $obat->stok }}"
+                                @disabled($obat->stok <= 0)>
+
+                                {{ $obat->nama_obat }} -
+                                Rp {{ number_format($obat->harga, 0, ',', '.') }}
+                                | Stok: {{ $obat->stok }}
+
+                                @if ($obat->stok <= 0)
+                                    (Habis)
+                                @endif
+
                             </option>
                         @endforeach
                     </select>
@@ -55,8 +72,18 @@
                             dipilih...</span>
                     </div>
                     @error('obat_json')
-                        <span class="text-red-500 text-xs mt-1">Obat wajib dipilih minimal satu.</span>
+                        <span class="text-red-500 text-xs mt-1">
+                            {{ $message }}
+                        </span>
                     @enderror
+
+                    @foreach ($errors->get('obat_json.*') as $messages)
+                        @foreach ($messages as $message)
+                            <span class="text-red-500 text-xs mt-1">
+                                {{ $message }}
+                            </span>
+                        @endforeach
+                    @endforeach
                 </div>
 
                 {{-- Total Harga --}}
@@ -76,7 +103,7 @@
                         <span class="text-sm font-semibold text-gray-700">Catatan (Opsional)</span>
                     </label>
                     <textarea name="catatan" class="textarea textarea-bordered border-2 p-4 w-full rounded-lg text-sm h-28"
-                        placeholder="Masukkan catatan..."></textarea>
+                        placeholder="Masukkan catatan...">{{ old('catatan') }}</textarea>
                 </div>
 
                 {{-- Buttons --}}
@@ -117,6 +144,13 @@
                 const id = option.value;
                 const nama = option.getAttribute('data-nama');
                 const harga = parseInt(option.getAttribute('data-harga'));
+                const stok = parseInt(option.getAttribute('data-stok'), 10);
+
+                if (!Number.isFinite(stok) || stok <= 0) {
+                    alert('Stok obat ini sudah habis!');
+                    this.value = "";
+                    return;
+                }
 
                 // Cek apakah obat sudah ada di daftar
                 if (selectedObatList.find(o => o.id === id)) {
@@ -173,12 +207,23 @@
                     const badge = document.createElement('div');
                     badge.className =
                         'inline-flex items-center gap-2 bg-blue-100 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-full text-sm font-medium';
-                    badge.innerHTML = `
-                        ${obat.nama}
-                        <button type="button" onclick="hapusObat('${obat.id}')" class="text-blue-400 hover:text-blue-700 focus:outline-none transition">
-                            <i class="fas fa-times-circle"></i>
-                        </button>
-                    `;
+                    const namaObat = document.createElement('span');
+                    namaObat.textContent = obat.nama;
+
+                    const tombolHapus = document.createElement('button');
+                    tombolHapus.type = 'button';
+                    tombolHapus.className =
+                        'text-blue-400 hover:text-blue-700 focus:outline-none transition';
+
+                    tombolHapus.innerHTML =
+                        '<i class="fas fa-times-circle"></i>';
+
+                    tombolHapus.addEventListener('click', function() {
+                        window.hapusObat(obat.id);
+                    });
+
+                    badge.appendChild(namaObat);
+                    badge.appendChild(tombolHapus);
                     listObatTerpilih.appendChild(badge);
                 });
             }
