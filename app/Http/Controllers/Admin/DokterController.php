@@ -7,6 +7,9 @@ use App\Models\Poli;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Exports\TableExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DokterController extends Controller
 {
@@ -99,10 +102,30 @@ class DokterController extends Controller
 
     public function export()
     {
-        $dokters = \App\Models\User::where('role', 'dokter')->get();
+        $dokters = User::where('role', 'dokter')
+            ->with('poli')
+            ->get();
 
-        return response(view('admin.dokter.export', compact('dokters')))
-            ->header('Content-Type', 'application/vnd.ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="Data_Dokter.xls"');
+        return Excel::download(
+            new TableExport(
+                'admin.dokter.export',
+                compact('dokters')
+            ),
+            'Data_Dokter.xlsx'
+        );
+    }
+
+    public function exportPdf()
+    {
+        $dokters = User::where('role', 'dokter')
+            ->with('poli')
+            ->get();
+
+        return Pdf::loadView(
+            'admin.dokter.export',
+            compact('dokters')
+        )
+            ->setPaper('a4', 'landscape')
+            ->download('Data_Dokter.pdf');
     }
 }

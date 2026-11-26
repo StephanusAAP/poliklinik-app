@@ -41,9 +41,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::resource('pasien', PasienController::class);
     Route::resource('obat', ObatController::class);
 
-    Route::get('/admin/obat-export', [App\Http\Controllers\Admin\ObatController::class, 'export'])->name('obat.export');
-    Route::get('/admin/dokter-export', [DokterController::class, 'export'])->name('dokter.export');
-    Route::get('/admin/pasien-export', [PasienController::class, 'export'])->name('pasien.export');
+    Route::get('/dokter-export', [DokterController::class, 'export'])->name('dokter.export');       // Export Data Dokter
+    Route::get('/dokter-export-pdf', [DokterController::class, 'exportPdf'])->name('dokter.export.pdf');
+    Route::get('/pasien-export', [PasienController::class, 'export'])->name('pasien.export');       // Export Data Pasien
+    Route::get('/pasien-export-pdf', [PasienController::class, 'exportPdf'])->name('pasien.export.pdf');
+    Route::get('/obat-export', [ObatController::class, 'export'])->name('obat.export');         // Export Data Obat
+    Route::get('/obat-export-pdf', [ObatController::class, 'exportPdf'])->name('obat.export.pdf');
+    
     Route::get('/pembayaran', [\App\Http\Controllers\Admin\PembayaranController::class, 'index'])->name('admin.pembayaran.index');
     Route::post('/pembayaran/{id}/verify', [\App\Http\Controllers\Admin\PembayaranController::class, 'verify'])->name('admin.pembayaran.verify');
     Route::post('/pembayaran/{id}/verify', [\App\Http\Controllers\Admin\PembayaranController::class, 'verify'])->name('admin.pembayaran.verify');

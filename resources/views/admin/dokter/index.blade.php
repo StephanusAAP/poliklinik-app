@@ -12,6 +12,11 @@
                 <i class="fas fa-file-excel text-xs"></i>
                 Export Excel
             </a>
+            <a href="{{ route('dokter.export.pdf') }}"
+                class="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl transition">
+                <i class="fas fa-file-pdf text-xs"></i>
+                Export PDF
+            </a>
 
             <a href="{{ route('dokter.create') }}"
                 class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90

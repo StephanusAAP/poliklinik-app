@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Obat;
 use Illuminate\Http\Request;
+use App\Exports\TableExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ObatController extends Controller
 {
@@ -87,10 +90,26 @@ class ObatController extends Controller
 
     public function export()
     {
-        $obats = \App\Models\Obat::all();
+        $obats = Obat::all();
 
-        return response(view('admin.obat.export', compact('obats')))
-            ->header('Content-Type', 'application/vnd.ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="Data_Obat.xls"');
+        return Excel::download(
+            new TableExport(
+                'admin.obat.export',
+                compact('obats')
+            ),
+            'Data_Obat.xlsx'
+        );
+    }
+
+    public function exportPdf()
+    {
+        $obats = Obat::all();
+
+        return Pdf::loadView(
+            'admin.obat.export',
+            compact('obats')
+        )
+            ->setPaper('a4', 'portrait')
+            ->download('Data_Obat.pdf');
     }
 }

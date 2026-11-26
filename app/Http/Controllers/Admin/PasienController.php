@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Exports\TableExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PasienController extends Controller
 {
@@ -91,10 +94,26 @@ class PasienController extends Controller
 
     public function export()
     {
-        $pasiens = \App\Models\User::where('role', 'pasien')->get();
+        $pasiens = User::where('role', 'pasien')->get();
 
-        return response(view('admin.pasien.export', compact('pasiens')))
-            ->header('Content-Type', 'application/vnd.ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="Data_Pasien.xls"');
+        return Excel::download(
+            new TableExport(
+                'admin.pasien.export',
+                compact('pasiens')
+            ),
+            'Data_Pasien.xlsx'
+        );
+    }
+
+    public function exportPdf()
+    {
+        $pasiens = User::where('role', 'pasien')->get();
+
+        return Pdf::loadView(
+            'admin.pasien.export',
+            compact('pasiens')
+        )
+            ->setPaper('a4', 'landscape')
+            ->download('Data_Pasien.pdf');
     }
 }
